@@ -15,6 +15,7 @@ public class App
         for( int i = 0; i < numPodcasts; i++ )
         {
             System.out.println( PodcastArray.PodcastTitle[i] );
+            System.out.println( PodcastArray.PodcastMedia[i] );
         }
     }
 

@@ -39,8 +39,6 @@ public class RSSFeedParser
                 NodeList itemLst = doc.getElementsByTagName("item");
 
                 PodcastArray.PodcastTitle = new String[itemLst.getLength()];
-                PodcastArray.PodcastURL = new String[itemLst.getLength()];
-                PodcastArray.PodcastContent = new String[itemLst.getLength()];
                 PodcastArray.PodcastMedia = new String[itemLst.getLength()];
 
                 for(int i=0; i < itemLst.getLength(); i++)
@@ -50,26 +48,17 @@ public class RSSFeedParser
                     {
                           Element ielem = (Element)item;
                           NodeList title = ielem.getElementsByTagName("title");
-                          NodeList link = ielem.getElementsByTagName("link");
                           //NodeList description = ielem.getElementsByTagName("description"); 
-                          NodeList content = ielem.getElementsByTagName("content:encoded");
                           NodeList media = ielem.getElementsByTagName("media:content");
                           
                           String mediaurl = media.item(0).getAttributes().getNamedItem("url").getNodeValue();
                           
                           PodcastArray.PodcastTitle[i] = title.item(0).getChildNodes().item(0).getNodeValue();
-                          PodcastArray.PodcastURL[i] = link.item(0).getChildNodes().item(0).getNodeValue();
-                          PodcastArray.PodcastContent[i] = content.item(0).getChildNodes().item(0).getNodeValue();
                           PodcastArray.PodcastMedia[i] = mediaurl;
                           
                           /*System.out.print(title.item(0).getChildNodes().item(0).getNodeValue());
                           System.out.print("\t\n");
-                          System.out.print(link.item(0).getChildNodes().item(0).getNodeValue());
-                          System.out.print("\t\n");
-                          System.out.print(content.item(0).getChildNodes().item(0).getNodeValue());
-                          System.out.print("\t\n");
                           System.out.print(mediaurl);
-                          System.out.print("\t\n");
                           System.out.print("\t\n");*/
                     }
                 }
