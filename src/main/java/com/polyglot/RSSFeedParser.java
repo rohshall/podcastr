@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,9 +23,10 @@ import org.xml.sax.SAXException;
  */
 public class RSSFeedParser
 {
-    public static void parse( String feedUrl )
+    public static List<Podcast> parse( String feedUrl )
     {
         URL url;
+        ArrayList<Podcast> podcasts = null;
         try 
         {
             url = new URL( feedUrl );
@@ -37,29 +39,23 @@ public class RSSFeedParser
                 doc = db.parse(url.openStream());
                 doc.getDocumentElement().normalize();
                 NodeList itemLst = doc.getElementsByTagName("item");
+                int numItems = itemLst.getLength();
+                
+                podcasts = new ArrayList<Podcast>( numItems );
 
-                PodcastArray.PodcastTitle = new String[itemLst.getLength()];
-                PodcastArray.PodcastMedia = new String[itemLst.getLength()];
-
-                for(int i=0; i < itemLst.getLength(); i++)
+                for(int i=0; i < numItems; i++)
                 {
                     Node item = itemLst.item(i);
                     if(item.getNodeType() == Node.ELEMENT_NODE)
                     {
                           Element ielem = (Element)item;
                           NodeList title = ielem.getElementsByTagName("title");
+                          String pTitle = title.item(0).getChildNodes().item(0).getNodeValue();
                           //NodeList description = ielem.getElementsByTagName("description"); 
                           NodeList media = ielem.getElementsByTagName("media:content");
+                          String pMediaUrl = media.item(0).getAttributes().getNamedItem("url").getNodeValue();
                           
-                          String mediaurl = media.item(0).getAttributes().getNamedItem("url").getNodeValue();
-                          
-                          PodcastArray.PodcastTitle[i] = title.item(0).getChildNodes().item(0).getNodeValue();
-                          PodcastArray.PodcastMedia[i] = mediaurl;
-                          
-                          /*System.out.print(title.item(0).getChildNodes().item(0).getNodeValue());
-                          System.out.print("\t\n");
-                          System.out.print(mediaurl);
-                          System.out.print("\t\n");*/
+                          podcasts.add( new Podcast( pTitle, pMediaUrl ) );
                     }
                 }
             }
@@ -79,5 +75,6 @@ public class RSSFeedParser
                 // TODO Auto-generated catch block
                 e.printStackTrace();
         }
+        return podcasts;
     }
 }
